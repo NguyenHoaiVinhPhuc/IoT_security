@@ -1,3 +1,7 @@
+#dataset sources: https://www.unb.ca/cic/datasets/ids-2018.html
+#http://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html
+#reference for modeling code: https://stackoverflow.com/questions/55527335/modeling-kdd-cup-99-dataset-using-neural-network
+
 #inmport data analyse library
 import pandas
 
@@ -47,7 +51,7 @@ from keras.layers import Dense
 classifier = Sequential()
 
 # Adding the input layer and the first hidden layer
-classifier.add(Dense(output_dim = 60, init = 'uniform', activation = 'relu', input_dim = 113))
+classifier.add(Dense(output_dim = 60, init = 'uniform', activation = 'relu', input_dim = 113))#input gốc là 118, nhưng khi training thì thuật toán báo lỗi sai kích thước so với dataset, 113 là giá trị thuật toán gợi ý.
 
 #Adding a second hidden layer
 classifier.add(Dense(output_dim = 60, init = 'uniform', activation = 'relu'))
@@ -66,7 +70,9 @@ print(y_pred)
 
 # Making the Confusion Matrix
 from sklearn.metrics import confusion_matrix
-cm = confusion_matrix(y_test, y_pred)
+cm = confusion_matrix(y_test, y_pred)#ma trận đánh giá độ chính xác của mô hình máy, thể hiện có bao nhiêu điểm dữ liệu thực sự thuộc vào một lớp, và được dự đoán là rơi vào một lớp.
+#https://machinelearningcoban.com/2017/08/31/evaluation/#-confusion-matrix
+#optional
 print("accuracy= ", cm)
 
 # Compiling the ANN
@@ -78,7 +84,7 @@ from keras.utils import to_categorical
 import numpy as np
 conv = to_categorical(y_train)
 y_train1 = np.argmax(conv,axis=1)
-classifier.fit(x_train, y_train1, verbose=1, batch_size = 118, nb_epoch = 20)
+classifier.fit(x_train, y_train1, verbose=1, batch_size = 118, nb_epoch = 20)#batch_size gốc là 10 nhưng tốc độ training rất chậm, khoảng 22ph cho mỗi epoch.
 
 #retrain and print training chart.
 %matplotlib inline
@@ -86,9 +92,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 plt.figure()
-
-history = classifier.fit(x_train, y_train1, validation_split=0.25, epochs=20, batch_size=118, verbose=1)
-
+history = classifier.fit(x_train, y_train1, validation_split=0.25, epochs=20, batch_size=118, verbose=1)#tương tự như comment trên.
 # Plot training & validation accuracy values
 plt.plot(history.history['acc'])
 plt.plot(history.history['val_acc'])
